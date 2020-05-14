@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/jinzhu/gorm"
 )
@@ -10,8 +11,7 @@ import (
 // will open and close db connection on each function
 
 func Connect() (*gorm.DB, error) {
-	cURL := fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local", "some_user", "some_password", "currency_db")
-
+	cURL := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_DATABASE"))
 	db, err := gorm.Open("mysql", cURL)
 	if err != nil {
 		return db, err
@@ -29,6 +29,7 @@ func GetLatestHistory() ([]CurrencyInformation, error) {
 	}
 	defer db.Close()
 
+	// could be done in one query I guess
 	var latestInfo CurrencyInformation
 	if err := db.Order("date desc").First(&latestInfo).Error; err != nil {
 		return []CurrencyInformation{}, err

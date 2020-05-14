@@ -42,8 +42,9 @@ func populate(cmd *cobra.Command, args []string) {
 
 	parsedRes := parseResponse(resStruct)
 
-	_ = saveResponseData(parsedRes)
-	// fmt.Println(resStruct)
+	if err := saveResponseData(parsedRes); err != nil {
+		panic(err)
+	}
 }
 
 func parseResponse(res db.XMLCurrencyResponse) []db.CurrencyInformation {

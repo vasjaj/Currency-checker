@@ -3,6 +3,7 @@ version: '3.4'
 services:
   db:
     image: mariadb:latest
+    container_name: mariadb
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
     env_file:
       - ./configs/db.env
@@ -19,7 +20,6 @@ services:
       - db
     env_file:
       - configs/web.env
-
     ports:
       - "8080:8080"
 
